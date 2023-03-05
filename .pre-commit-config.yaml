@@ -83,4 +83,4 @@ repos:
         additional_dependencies: [isort]
       - id: nbqa-black
         args: [--nbqa-mutate]
-        additional_dependencies: [black
+        additional_dependencies: [black]
