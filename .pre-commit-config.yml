@@ -1,0 +1,86 @@
+# Pre-commit rules
+#
+# Notes
+# -----
+# - Ensure you have installed the hooks, see the README for instructions.
+# - When you add a new hook you must run:
+#   - `pre-commit run --all-files`
+#
+# References
+# ----------
+# - https://pre-commit.com
+# - https://pre-commit.com/hooks.html
+# - https://pre-commit.com/#adding-pre-commit-plugins-to-your-project
+# - https://pre-commit.com/#regular-expressions
+# - https://docs.python.org/3/library/re.html#regular-expression-syntax
+repos:
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v4.1.0
+    hooks:
+      - id: check-added-large-files
+      - id: check-yaml
+      - id: end-of-file-fixer
+      - id: sort-simple-yaml
+      - id: trailing-whitespace
+      - id: check-merge-conflict
+      - id: check-docstring-first
+      - id: debug-statements
+      - id: fix-byte-order-marker
+      - id: forbid-new-submodules
+      - id: requirements-txt-fixer
+
+  # Python import ordering and splitting to prevent merge conflicts
+  - repo: https://github.com/asottile/reorder_python_imports
+    rev: v2.7.1
+    hooks:
+      - id: reorder-python-imports
+        args: ["--application-directories=.:src"]
+
+  # Python autoformatter
+  - repo: https://github.com/psf/black
+    rev: 22.3.0
+    hooks:
+      - id: black
+
+  # Dockerfile linter
+  - repo: https://github.com/IamTheFij/docker-pre-commit
+    rev: v2.0.1
+    hooks:
+      - id: hadolint
+        files: (Dockerfile)$
+
+  # Markdown linter
+  # - Leave revision at master, the hook id `markdownlint_docker` only
+  #   exists on this branch, and none of the release branches (vX.Y.Z)
+  # - Ignored rules:
+  #   - https://github.com/markdownlint/markdownlint/blob/master/docs/RULES.md#md013---line-length
+  #   - https://github.com/markdownlint/markdownlint/blob/master/docs/RULES.md#md025---multiple-top-level-headers-in-the-same-document
+  - repo: https://github.com/markdownlint/markdownlint
+    rev: master
+    hooks:
+      - id: markdownlint_docker
+        language: docker_image
+        files: \.(md|mdown|markdown)$
+        entry: markdownlint/markdownlint --rules ~MD013,~MD025
+
+  # Prevent secrets entering the repo
+  # Exclude files:
+  # - ./README.md
+  # - *.lock
+  - repo: https://github.com/Yelp/detect-secrets
+    rev: v1.1.0
+    hooks:
+      - id: detect-secrets
+        exclude: (^README\.md|\.lock|\.ipynb)$
+
+  # Jupyter notebook import sort
+  # Jupyter notebook autoformatter
+  - repo: https://github.com/nbQA-dev/nbQA
+    rev: 1.2.3
+    hooks:
+      - id: nbqa-isort
+        args: [--nbqa-mutate]
+        additional_dependencies: [isort]
+      - id: nbqa-black
+        args: [--nbqa-mutate]
+        additional_dependencies: [black
