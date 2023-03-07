@@ -3,7 +3,7 @@ import math
 import torch
 import torch.nn.functional as F
 
-from numeric_grad import Numeric
+from numeric_grad.numeric_grad import Numeric
 
 
 class TestNumeric:
