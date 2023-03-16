@@ -34,7 +34,7 @@ repos:
     rev: v2.7.1
     hooks:
       - id: reorder-python-imports
-        args: ["--application-directories=.:src"]
+        args: ["--application-directories=.:numeric_grad"]
 
   # Python autoformatter
   - repo: https://github.com/psf/black
@@ -49,19 +49,6 @@ repos:
       - id: hadolint
         files: (Dockerfile)$
 
-  # Markdown linter
-  # - Leave revision at master, the hook id `markdownlint_docker` only
-  #   exists on this branch, and none of the release branches (vX.Y.Z)
-  # - Ignored rules:
-  #   - https://github.com/markdownlint/markdownlint/blob/master/docs/RULES.md#md013---line-length
-  #   - https://github.com/markdownlint/markdownlint/blob/master/docs/RULES.md#md025---multiple-top-level-headers-in-the-same-document
-  - repo: https://github.com/markdownlint/markdownlint
-    rev: master
-    hooks:
-      - id: markdownlint_docker
-        language: docker_image
-        files: \.(md|mdown|markdown)$
-        entry: markdownlint/markdownlint --rules ~MD013,~MD025
 
   # Prevent secrets entering the repo
   # Exclude files:
